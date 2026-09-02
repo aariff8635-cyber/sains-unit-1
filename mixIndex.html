@@ -209,7 +209,7 @@ body{
 
 .status-row{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(3,1fr);
     gap:10px;
     align-items:center;
 }
@@ -646,9 +646,9 @@ body{
     }
 }
 
-.level-score-box{
+.level-attempt-box{
     display:grid;
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:1fr;
     gap:10px;
     margin:17px 0 20px;
 }
@@ -680,30 +680,6 @@ body{
     font-size:78px;
     margin-bottom:6px;
     animation:bounce 1s infinite alternate;
-}
-
-.score-circle{
-    width:150px;
-    height:150px;
-    margin:18px auto;
-    border-radius:50%;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(135deg,#eee8ff,#ffe5ef);
-    border:8px solid #faf8ff;
-}
-
-.score-big{
-    font-size:38px;
-    color:var(--purple-dark);
-    font-weight:900;
-}
-
-.score-label{
-    font-family:Arial,sans-serif;
-    font-size:12px;
 }
 
 .result-message{
@@ -1010,19 +986,6 @@ body{
 
         </div>
 
-        <div class="status-item">
-
-            <div class="status-icon">
-                ⭐
-            </div>
-
-            <span>
-                Markah:
-                <b id="scoreText">0</b>
-            </span>
-
-        </div>
-
     </div>
 
     <div class="progress-track">
@@ -1120,7 +1083,7 @@ body{
             Hebat! Semua pasangan telah ditemui.
         </p>
 
-        <div class="level-score-box">
+        <div class="level-attempt-box">
 
             <div class="level-stat">
 
@@ -1130,18 +1093,6 @@ body{
 
                 <span>
                     CUBAAN LEVEL
-                </span>
-
-            </div>
-
-            <div class="level-stat">
-
-                <strong id="levelScore">
-                    50
-                </strong>
-
-                <span>
-                    MARKAH LEVEL
                 </span>
 
             </div>
@@ -1418,9 +1369,6 @@ let levelAttempts = 0;
 
 let totalAttempts = 0;
 
-let score = 0;
-
-let levelStartScore = 0;
 
 let soundEnabled = true;
 
@@ -1489,7 +1437,6 @@ function resetWholeGame(){
 
     currentLevel = 0;
 
-    score = 0;
 
     totalAttempts = 0;
 
@@ -1508,7 +1455,6 @@ function loadLevel(){
 
     levelAttempts = 0;
 
-    levelStartScore = score;
 
     firstCard = null;
 
@@ -1823,10 +1769,6 @@ function matchSuccess(){
     matchedPairs++;
 
 
-    /* setiap pasangan betul = 10 markah */
-
-    score += 10;
-
 
     updateStatus();
 
@@ -1940,11 +1882,6 @@ function updateStatus(){
         levelAttempts;
 
 
-    document.getElementById(
-        "scoreText"
-    ).textContent =
-        score;
-
 
     /*
        Total keseluruhan:
@@ -2046,10 +1983,6 @@ function completeLevel(){
         currentLevel + 1;
 
 
-    const levelEarnedScore =
-        score -
-        levelStartScore;
-
 
     document.getElementById(
         "levelCompleteTitle"
@@ -2093,11 +2026,6 @@ function completeLevel(){
     ).textContent =
         levelAttempts;
 
-
-    document.getElementById(
-        "levelScore"
-    ).textContent =
-        levelEarnedScore;
 
 
     /*
