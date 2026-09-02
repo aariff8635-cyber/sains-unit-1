@@ -1181,23 +1181,10 @@ body{
             Semua Level Selesai!
         </h2>
 
-        <div class="score-circle">
-
-            <div
-                class="score-big"
-                id="finalScore">
-                250
-            </div>
-
-            <div class="score-label">
-                MARKAH
-            </div>
-
-        </div>
-
         <div
             class="result-message"
             id="resultMessage">
+            🎉 Tahniah! Kamu berjaya menjawab semua soalan!
         </div>
 
         <div class="result-buttons">
@@ -2208,119 +2195,16 @@ function finishGame(){
     soundFinish();
 
 
-    /*
-       Basic score maksimum:
-       25 pasangan x 10 = 250
-
-       Bonus berdasarkan jumlah cubaan.
-    */
-
-    const minimumAttempts =
-        25;
-
-
-    const extraAttempts =
-        Math.max(
-            0,
-            totalAttempts -
-            minimumAttempts
-        );
-
-
-    const bonus =
-        Math.max(
-            0,
-            250 -
-            extraAttempts * 2
-        );
-
-
-    const finalScore =
-        score +
-        bonus;
-
-
-    document.getElementById(
-        "finalScore"
-    ).textContent =
-        finalScore;
-
-
-    let emoji;
-    let message;
-
-
-    if(totalAttempts <= 35){
-
-        emoji = "🏆";
-
-        message =
-            "Cemerlang! Ingatan kamu sangat hebat dan kamu berjaya menamatkan semua 5 level!";
-
-    }
-    else if(totalAttempts <= 50){
-
-        emoji = "🌟";
-
-        message =
-            "Syabas! Semua 25 pasangan berjaya ditemui. Kamu seorang Saintis Cilik yang hebat!";
-
-    }
-    else if(totalAttempts <= 70){
-
-        emoji = "😊";
-
-        message =
-            "Bagus! Kamu berjaya menamatkan semua level. Cuba lagi untuk kurangkan jumlah cubaan.";
-
-    }
-    else{
-
-        emoji = "💪";
-
-        message =
-            "Tahniah! Kamu berjaya menyelesaikan kesemua 25 pasangan. Teruskan berlatih!";
-
-    }
-
-
     document.getElementById(
         "resultEmoji"
     ).textContent =
-        emoji;
+        "🏆";
 
 
     document.getElementById(
         "resultMessage"
-    ).innerHTML =
-
-        message +
-
-        "<br><br>" +
-
-        "🎯 Level selesai: <b>5/5</b>" +
-
-        "<br>" +
-
-        "✅ Pasangan ditemui: <b>25/25</b>" +
-
-        "<br>" +
-
-        "👆 Jumlah cubaan: <b>" +
-        totalAttempts +
-        "</b>" +
-
-        "<br>" +
-
-        "⭐ Markah pasangan: <b>" +
-        score +
-        "</b>" +
-
-        "<br>" +
-
-        "🎁 Bonus ingatan: <b>" +
-        bonus +
-        "</b>";
+    ).textContent =
+        "🎉 Tahniah! Kamu berjaya menjawab semua soalan!";
 
 
     document.getElementById(
