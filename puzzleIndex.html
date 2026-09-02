@@ -1,0 +1,5498 @@
+<!DOCTYPE html>
+<html lang="ms">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,
+             initial-scale=1.0,
+             maximum-scale=1.0,
+             user-scalable=no"
+>
+
+<title>Puzzle Organ Deria - Jom Memerhati</title>
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+
+    font-family:
+        "Trebuchet MS",
+        "Arial Rounded MT Bold",
+        Arial,
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dff7ff 0%,
+            #eef0ff 35%,
+            #ffe7f3 70%,
+            #e4f9df 100%
+        );
+
+    background-attachment: fixed;
+
+    color: #263238;
+
+    overflow-x: hidden;
+
+    position: relative;
+
+    /*
+       IMPORTANT:
+       Jangan disable touch-action pada body.
+       Kita hanya disable native gesture pada
+       puzzle piece ketika drag bermula.
+    */
+}
+
+
+/* =========================================================
+   WEBSITE BACKGROUND
+========================================================= */
+
+.sky-decoration {
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 0;
+
+    overflow: hidden;
+
+    background-image:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.8) 2px,
+            transparent 3px
+        );
+
+    background-size: 85px 85px;
+}
+
+
+.sky-decoration::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    left: -90px;
+    top: 18%;
+
+    border-radius: 50%;
+
+    background:
+        rgba(129,212,250,.25);
+
+    filter: blur(3px);
+}
+
+
+.sky-decoration::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 250px;
+    height: 250px;
+
+    right: -100px;
+    bottom: 8%;
+
+    border-radius: 50%;
+
+    background:
+        rgba(206,147,216,.20);
+
+    filter: blur(4px);
+}
+
+
+/* =========================================================
+   CLOUD
+========================================================= */
+
+.cloud {
+
+    position: absolute;
+
+    background:
+        rgba(255,255,255,.82);
+
+    border-radius: 100px;
+
+    filter:
+        drop-shadow(
+            0 5px 10px
+            rgba(120,150,180,.08)
+        );
+}
+
+
+.cloud::before,
+.cloud::after {
+
+    content: "";
+
+    position: absolute;
+
+    background: inherit;
+
+    border-radius: 50%;
+}
+
+
+.cloud::before {
+
+    width: 45px;
+    height: 45px;
+
+    left: 25px;
+    top: -18px;
+}
+
+
+.cloud::after {
+
+    width: 60px;
+    height: 60px;
+
+    right: 20px;
+    top: -27px;
+}
+
+
+.cloud-1 {
+
+    width: 130px;
+    height: 35px;
+
+    left: 3%;
+    top: 8%;
+}
+
+
+.cloud-2 {
+
+    width: 160px;
+    height: 40px;
+
+    right: 3%;
+    top: 17%;
+}
+
+
+/* =========================================================
+   SUN
+========================================================= */
+
+.sun {
+
+    position: absolute;
+
+    width: 55px;
+    height: 55px;
+
+    right: 9%;
+    top: 4%;
+
+    border-radius: 50%;
+
+    background:
+        #ffe082;
+
+    box-shadow:
+        0 0 0 9px
+        rgba(255,224,130,.15),
+
+        0 0 25px
+        rgba(255,224,130,.35);
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+
+.game-wrapper {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: min(1050px, 90%);
+
+    margin: 0 auto;
+
+    padding:
+        16px 0 25px;
+}
+
+
+.game-wrapper::before {
+
+    content: "";
+
+    position: absolute;
+
+    z-index: -1;
+
+    top: 5px;
+
+    left: -15px;
+
+    right: -15px;
+
+    bottom: 10px;
+
+    border-radius: 25px;
+
+    background:
+        rgba(255,255,255,.18);
+
+    border:
+        2px solid
+        rgba(255,255,255,.45);
+
+    backdrop-filter:
+        blur(3px);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+
+    background:
+        rgba(255,255,255,.97);
+
+    border:
+        3px solid white;
+
+    border-radius:
+        18px;
+
+    padding:
+        9px 13px;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    box-shadow:
+        0 5px 0
+        rgba(80,100,130,.10),
+
+        0 9px 20px
+        rgba(80,100,130,.10);
+}
+
+
+.logo-area {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+}
+
+
+.logo-puzzle {
+
+    width:
+        45px;
+
+    height:
+        45px;
+
+    border-radius:
+        12px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffca28,
+            #ff8f00
+        );
+
+    font-size:
+        28px;
+
+    box-shadow:
+        0 3px 0
+        #e65100;
+}
+
+
+.title-area h1 {
+
+    font-size:
+        22px;
+
+    color:
+        #1976d2;
+
+    font-weight:
+        1000;
+}
+
+
+.title-area p {
+
+    margin-top:
+        2px;
+
+    color:
+        #607d8b;
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+}
+
+
+/* =========================================================
+   HEADER STATS
+========================================================= */
+
+.header-stats {
+
+    display:
+        flex;
+
+    gap:
+        6px;
+}
+
+
+.stat {
+
+    min-width:
+        65px;
+
+    padding:
+        5px 7px;
+
+    border-radius:
+        11px;
+
+    background:
+        #f5f9ff;
+
+    border:
+        1px solid
+        #e3f2fd;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+}
+
+
+.stat-icon {
+
+    font-size:
+        15px;
+}
+
+
+.stat-label {
+
+    font-size:
+        8px;
+
+    color:
+        #607d8b;
+
+    font-weight:
+        900;
+}
+
+
+.stat-value {
+
+    font-size:
+        15px;
+
+    color:
+        #1976d2;
+
+    font-weight:
+        1000;
+}
+
+
+/* =========================================================
+   GAME AREA
+========================================================= */
+
+.game-area {
+
+    margin-top:
+        12px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        minmax(250px,.72fr)
+        minmax(400px,1.28fr);
+
+    grid-template-rows:
+        auto auto;
+
+    column-gap:
+        12px;
+
+    row-gap:
+        12px;
+
+    align-items:
+        start;
+}
+
+
+/* =========================================================
+   PANEL
+========================================================= */
+
+.panel {
+
+    background:
+        rgba(255,255,255,.98);
+
+    border-radius:
+        16px;
+
+    overflow:
+        hidden;
+
+    box-shadow:
+        0 5px 0
+        rgba(80,100,130,.09),
+
+        0 9px 20px
+        rgba(80,100,130,.09);
+}
+
+
+.panel-header {
+
+    padding:
+        9px 13px;
+
+    font-size:
+        14px;
+
+    font-weight:
+        1000;
+
+    color:
+        white;
+}
+
+
+.question-header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #42a5f5,
+            #1565c0
+        );
+}
+
+
+.puzzle-header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #66bb6a,
+            #2e7d32
+        );
+}
+
+
+.pieces-header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #ab47bc,
+            #6a1b9a
+        );
+}
+
+
+/* =========================================================
+   QUESTION
+========================================================= */
+
+.question-panel {
+
+    grid-column:
+        1;
+
+    grid-row:
+        1 / span 2;
+}
+
+
+.question-content {
+
+    padding:
+        12px;
+}
+
+
+.question-number {
+
+    display:
+        inline-block;
+
+    padding:
+        5px 9px;
+
+    border-radius:
+        10px;
+
+    background:
+        #e1f5fe;
+
+    color:
+        #0277bd;
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+
+    margin-bottom:
+        9px;
+}
+
+
+.question-text {
+
+    font-size:
+        16px;
+
+    line-height:
+        1.35;
+
+    font-weight:
+        900;
+
+    min-height:
+        75px;
+
+    color:
+        #263238;
+}
+
+
+.options {
+
+    display:
+        grid;
+
+    gap:
+        7px;
+
+    margin-top:
+        8px;
+}
+
+
+.option {
+
+    border:
+        2px solid
+        #d9edf9;
+
+    background:
+        #fafdff;
+
+    border-radius:
+        11px;
+
+    padding:
+        8px 9px;
+
+    cursor:
+        pointer;
+
+    text-align:
+        left;
+
+    font-family:
+        inherit;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+    transition:
+        .18s;
+}
+
+
+.option:hover {
+
+    transform:
+        translateX(3px);
+
+    border-color:
+        #42a5f5;
+
+    background:
+        #e3f2fd;
+}
+
+
+.option.correct {
+
+    background:
+        #c8e6c9;
+
+    border-color:
+        #43a047;
+}
+
+
+.option.wrong {
+
+    background:
+        #ffcdd2;
+
+    border-color:
+        #e53935;
+
+    animation:
+        shake .35s ease;
+}
+
+
+.option:disabled {
+
+    cursor:
+        default;
+}
+
+
+@keyframes shake {
+
+    0%,100% {
+        transform:
+            translateX(0);
+    }
+
+    25% {
+        transform:
+            translateX(-5px);
+    }
+
+    75% {
+        transform:
+            translateX(5px);
+    }
+}
+
+
+/* =========================================================
+   FEEDBACK
+========================================================= */
+
+.feedback {
+
+    margin-top:
+        9px;
+
+    padding:
+        8px;
+
+    border-radius:
+        11px;
+
+    text-align:
+        center;
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+
+    display:
+        none;
+}
+
+
+.feedback.show {
+
+    display:
+        block;
+}
+
+
+.feedback.success {
+
+    background:
+        #e8f5e9;
+
+    color:
+        #2e7d32;
+}
+
+
+.feedback.error {
+
+    background:
+        #ffebee;
+
+    color:
+        #c62828;
+}
+
+
+/* =========================================================
+   INSTRUCTION
+========================================================= */
+
+.instruction {
+
+    margin-top:
+        10px;
+
+    padding:
+        8px;
+
+    border-radius:
+        11px;
+
+    background:
+        #fff8e1;
+
+    border:
+        1px solid
+        #ffe082;
+
+    font-size:
+        10px;
+
+    line-height:
+        1.35;
+
+    font-weight:
+        700;
+
+    color:
+        #6d4c41;
+}
+
+
+/* =========================================================
+   NEXT BUTTON
+========================================================= */
+
+.next-area {
+
+    margin-top:
+        9px;
+
+    text-align:
+        center;
+}
+
+
+.next-button {
+
+    display:
+        none;
+
+    border:
+        none;
+
+    border-radius:
+        12px;
+
+    padding:
+        9px 14px;
+
+    color:
+        white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #42a5f5,
+            #1565c0
+        );
+
+    box-shadow:
+        0 3px 0
+        #0d47a1;
+
+    font-family:
+        inherit;
+
+    font-size:
+        11px;
+
+    font-weight:
+        1000;
+
+    cursor:
+        pointer;
+
+    transition:
+        .15s;
+}
+
+
+.next-button.show {
+
+    display:
+        inline-block;
+}
+
+
+.next-button:active {
+
+    transform:
+        translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        #0d47a1;
+}
+
+
+/* =========================================================
+   PUZZLE PIECES
+========================================================= */
+
+.pieces-panel {
+
+    grid-column:
+        2;
+
+    grid-row:
+        1;
+
+    width:
+        100%;
+}
+
+
+.pieces-content {
+
+    min-height:
+        100px;
+
+    padding:
+        10px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(10,1fr);
+
+    gap:
+        5px;
+
+    align-items:
+        center;
+}
+
+
+.locked-message {
+
+    grid-column:
+        1 / -1;
+
+    text-align:
+        center;
+
+    color:
+        #78909c;
+
+    font-weight:
+        900;
+
+    font-size:
+        11px;
+
+    padding:
+        15px;
+}
+
+
+.piece {
+
+    width:
+        100%;
+
+    aspect-ratio:
+        1 / 1;
+
+    border-radius:
+        5px;
+
+    cursor:
+        grab;
+
+    /*
+       PENTING UNTUK MOBILE / iPAD
+    */
+    touch-action:
+        none;
+
+    user-select:
+        none;
+
+    -webkit-user-select:
+        none;
+
+    -webkit-touch-callout:
+        none;
+
+    overflow:
+        hidden;
+
+    background:
+        white;
+
+    border:
+        1px solid white;
+
+    box-shadow:
+        0 2px 4px
+        rgba(0,0,0,.18);
+
+    transition:
+        transform .15s;
+}
+
+
+.piece:hover {
+
+    transform:
+        translateY(-3px)
+        scale(1.04);
+}
+
+
+.piece.dragging {
+
+    position:
+        fixed;
+
+    z-index:
+        999999;
+
+    pointer-events:
+        none;
+
+    transform:
+        scale(1.08)
+        rotate(3deg);
+
+    box-shadow:
+        0 8px 18px
+        rgba(0,0,0,.25);
+
+    /*
+       Jangan ada transition semasa drag
+       supaya piece ikut jari dengan tepat.
+    */
+    transition:
+        none !important;
+}
+
+
+/* =========================================================
+   PUZZLE BOARD
+========================================================= */
+
+.puzzle-panel {
+
+    grid-column:
+        2;
+
+    grid-row:
+        2;
+}
+
+
+.puzzle-content {
+
+    padding:
+        10px;
+}
+
+
+.puzzle-instruction {
+
+    text-align:
+        center;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    color:
+        #607d8b;
+
+    margin-bottom:
+        7px;
+}
+
+
+.puzzle-board {
+
+    position:
+        relative;
+
+    width:
+        min(390px,100%);
+
+    aspect-ratio:
+        1 / 1;
+
+    margin:
+        auto;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        13px;
+
+    border:
+        3px solid #fff;
+
+    box-shadow:
+        0 4px 12px
+        rgba(0,0,0,.15);
+
+    background:
+        #fff8e1;
+}
+
+
+/* =========================================================
+   ORIGINAL IMAGE
+========================================================= */
+
+.sense-image {
+
+    display:
+        none !important;
+}
+
+
+/* =========================================================
+   PUZZLE SLOTS
+========================================================= */
+
+.puzzle-slots {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    z-index:
+        5;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(5,1fr);
+
+    grid-template-rows:
+        repeat(5,1fr);
+}
+
+
+.slot {
+
+    position:
+        relative;
+
+    border:
+        1px dashed
+        rgba(70,70,70,.35);
+
+    background:
+        rgba(255,255,255,.18);
+
+    transition:
+        .2s;
+
+    overflow:
+        hidden;
+}
+
+
+.slot.highlight {
+
+    background:
+        rgba(255,235,59,.55);
+
+    box-shadow:
+        inset 0 0 0 3px
+        #ffca28;
+
+    animation:
+        pulseSlot 1s infinite;
+}
+
+
+.slot.near-target {
+
+    background:
+        rgba(129,199,132,.5);
+
+    box-shadow:
+        inset 0 0 0 2px
+        #43a047;
+}
+
+
+.slot.filled {
+
+    background:
+        transparent;
+}
+
+
+.slot.success {
+
+    animation:
+        slotSuccess .4s ease;
+}
+
+
+@keyframes pulseSlot {
+
+    0%,100% {
+        opacity:
+            1;
+    }
+
+    50% {
+        opacity:
+            .45;
+    }
+}
+
+
+@keyframes slotSuccess {
+
+    0% {
+        transform:
+            scale(.85);
+    }
+
+    100% {
+        transform:
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.progress-area {
+
+    margin-top:
+        12px;
+
+    background:
+        rgba(255,255,255,.97);
+
+    padding:
+        9px 12px;
+
+    border-radius:
+        13px;
+
+    box-shadow:
+        0 5px 12px
+        rgba(80,100,130,.10);
+}
+
+
+.progress-top {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    font-size:
+        11px;
+
+    font-weight:
+        1000;
+
+    margin-bottom:
+        5px;
+}
+
+
+.progress-track {
+
+    width:
+        100%;
+
+    height:
+        11px;
+
+    border-radius:
+        20px;
+
+    overflow:
+        hidden;
+
+    background:
+        #e0e0e0;
+}
+
+
+.progress-fill {
+
+    height:
+        100%;
+
+    width:
+        0%;
+
+    border-radius:
+        20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #42a5f5,
+            #66bb6a
+        );
+
+    transition:
+        width .35s ease;
+}
+
+
+/* =========================================================
+   OVERLAY
+========================================================= */
+
+.overlay {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        10000;
+
+    background:
+        rgba(47,62,85,.58);
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    padding:
+        15px;
+
+    backdrop-filter:
+        blur(6px);
+}
+
+
+.modal {
+
+    width:
+        min(500px,100%);
+
+    max-height:
+        92vh;
+
+    overflow-y:
+        auto;
+
+    background:
+        white;
+
+    border-radius:
+        22px;
+
+    padding:
+        25px 22px;
+
+    text-align:
+        center;
+
+    box-shadow:
+        0 15px 45px
+        rgba(0,0,0,.25);
+
+    animation:
+        modalPop .35s ease;
+}
+
+
+@keyframes modalPop {
+
+    from {
+        transform:
+            scale(.8);
+
+        opacity:
+            0;
+    }
+
+    to {
+        transform:
+            scale(1);
+
+        opacity:
+            1;
+    }
+}
+
+
+.modal-emoji {
+
+    font-size:
+        40px;
+
+    margin-bottom:
+        8px;
+}
+
+
+.modal h2 {
+
+    font-size:
+        24px;
+
+    color:
+        #1976d2;
+
+    margin-bottom:
+        10px;
+
+    font-weight:
+        1000;
+}
+
+
+.modal p {
+
+    font-size:
+        13px;
+
+    line-height:
+        1.4;
+
+    font-weight:
+        700;
+
+    color:
+        #455a64;
+}
+
+
+.final-score {
+
+    font-size:
+        36px;
+
+    color:
+        #43a047;
+
+    font-weight:
+        1000;
+
+    margin:
+        9px 0;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.result-buttons {
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    gap:
+        8px;
+
+    flex-wrap:
+        wrap;
+
+    margin-top:
+        14px;
+}
+
+
+.start-button,
+.restart-button,
+.home-button {
+
+    border:
+        none;
+
+    border-radius:
+        14px;
+
+    padding:
+        11px 20px;
+
+    color:
+        white;
+
+    font-family:
+        inherit;
+
+    font-size:
+        13px;
+
+    font-weight:
+        900;
+
+    cursor:
+        pointer;
+
+    transition:
+        .15s;
+}
+
+
+.start-button {
+
+    margin-top:
+        15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffca28,
+            #ff8f00
+        );
+
+    box-shadow:
+        0 4px 0
+        #e65100;
+}
+
+
+.restart-button {
+
+    background:
+        linear-gradient(
+            135deg,
+            #7e57c2,
+            #512da8
+        );
+
+    box-shadow:
+        0 4px 0
+        #311b92;
+}
+
+
+.home-button {
+
+    background:
+        linear-gradient(
+            135deg,
+            #42a5f5,
+            #1565c0
+        );
+
+    box-shadow:
+        0 4px 0
+        #0d47a1;
+}
+
+
+.start-button:active,
+.restart-button:active,
+.home-button:active {
+
+    transform:
+        translateY(3px);
+}
+
+
+.start-button:active {
+
+    box-shadow:
+        0 1px 0
+        #e65100;
+}
+
+
+.restart-button:active {
+
+    box-shadow:
+        0 1px 0
+        #311b92;
+}
+
+
+.home-button:active {
+
+    box-shadow:
+        0 1px 0
+        #0d47a1;
+}
+
+
+.hidden {
+
+    display:
+        none !important;
+}
+
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+.confetti {
+
+    position:
+        fixed;
+
+    top:
+        -30px;
+
+    z-index:
+        20000;
+
+    pointer-events:
+        none;
+
+    animation:
+        confettiFall
+        linear
+        forwards;
+}
+
+
+@keyframes confettiFall {
+
+    to {
+
+        transform:
+            translateY(110vh)
+            rotate(720deg);
+    }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width:1150px) {
+
+    .game-wrapper {
+
+        width:
+            92%;
+    }
+
+
+    .game-area {
+
+        grid-template-columns:
+            250px
+            minmax(350px,1fr);
+    }
+
+
+    .pieces-content {
+
+        grid-template-columns:
+            repeat(6,1fr);
+
+        min-height:
+            auto;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width:800px) {
+
+    .game-wrapper {
+
+        width:
+            94%;
+
+        padding-top:
+            12px;
+    }
+
+
+    .game-wrapper::before {
+
+        left:
+            -8px;
+
+        right:
+            -8px;
+
+        border-radius:
+            20px;
+    }
+
+
+    .header {
+
+        flex-direction:
+            column;
+
+        padding:
+            8px 10px;
+    }
+
+
+    .title-area h1 {
+
+        font-size:
+            19px;
+    }
+
+
+    .header-stats {
+
+        width:
+            100%;
+
+        display:
+            grid;
+
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+
+
+    .stat {
+
+        min-width:
+            0;
+    }
+
+
+    .game-area {
+
+        grid-template-columns:
+            1fr;
+
+        grid-template-rows:
+            auto
+            auto
+            auto;
+
+        row-gap:
+            12px;
+    }
+
+
+    .question-panel,
+    .pieces-panel,
+    .puzzle-panel {
+
+        grid-column:
+            1;
+    }
+
+
+    .question-panel {
+
+        grid-row:
+            1;
+    }
+
+
+    .pieces-panel {
+
+        grid-row:
+            2;
+    }
+
+
+    .puzzle-panel {
+
+        grid-row:
+            3;
+    }
+
+
+    .puzzle-board {
+
+        width:
+            min(340px,100%);
+    }
+
+
+    .pieces-content {
+
+        grid-template-columns:
+            repeat(5,1fr);
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width:500px) {
+
+    .game-wrapper {
+
+        width:
+            95%;
+    }
+
+
+    .logo-puzzle {
+
+        width:
+            40px;
+
+        height:
+            40px;
+
+        font-size:
+            25px;
+    }
+
+
+    .title-area h1 {
+
+        font-size:
+            17px;
+    }
+
+
+    .title-area p {
+
+        font-size:
+            9px;
+    }
+
+
+    .stat {
+
+        padding:
+            5px;
+    }
+
+
+    .stat-icon {
+
+        font-size:
+            14px;
+    }
+
+
+    .stat-value {
+
+        font-size:
+            14px;
+    }
+
+
+    .question-text {
+
+        font-size:
+            14px;
+
+        min-height:
+            65px;
+    }
+
+
+    .option {
+
+        font-size:
+            11px;
+
+        padding:
+            7px;
+    }
+
+
+    .pieces-content {
+
+        grid-template-columns:
+            repeat(5,1fr);
+
+        gap:
+            4px;
+    }
+
+
+    .puzzle-board {
+
+        width:
+            min(300px,100%);
+    }
+
+
+    .modal {
+
+        padding:
+            20px 15px;
+    }
+
+
+    .result-buttons {
+
+        flex-direction:
+            column;
+    }
+
+
+    .restart-button,
+    .home-button {
+
+        width:
+            100%;
+    }
+
+}
+
+
+/* =========================================================
+   LANDSCAPE MOBILE / TABLET
+========================================================= */
+
+@media (
+    orientation: landscape
+) and (max-height: 600px) {
+
+    .game-wrapper {
+
+        width:
+            96%;
+
+        padding-top:
+            7px;
+
+        padding-bottom:
+            15px;
+    }
+
+
+    .header {
+
+        padding:
+            6px 10px;
+    }
+
+
+    .game-area {
+
+        margin-top:
+            8px;
+
+        row-gap:
+            8px;
+    }
+
+
+    .panel-header {
+
+        padding:
+            7px 10px;
+    }
+
+
+    .question-content {
+
+        padding:
+            8px;
+    }
+
+
+    .pieces-content {
+
+        padding:
+            8px;
+
+        min-height:
+            80px;
+    }
+
+
+    .puzzle-content {
+
+        padding:
+            8px;
+    }
+
+
+    .puzzle-board {
+
+        width:
+            min(330px,100%);
+    }
+
+
+    .progress-area {
+
+        margin-top:
+            8px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL HEIGHT
+========================================================= */
+
+@media (max-height:600px) {
+
+    .game-wrapper {
+
+        padding-top:
+            8px;
+
+        padding-bottom:
+            12px;
+    }
+
+
+    .header {
+
+        padding:
+            6px 9px;
+    }
+
+
+    .game-area {
+
+        margin-top:
+            7px;
+
+        row-gap:
+            7px;
+    }
+
+
+    .panel-header {
+
+        padding:
+            7px 10px;
+    }
+
+
+    .question-content {
+
+        padding:
+            8px;
+    }
+
+
+    .puzzle-content {
+
+        padding:
+            7px;
+    }
+
+
+    .puzzle-board {
+
+        width:
+            min(300px,100%);
+    }
+
+
+    .progress-area {
+
+        margin-top:
+            7px;
+    }
+
+
+    .modal {
+
+        max-height:
+            94vh;
+
+        padding:
+            12px 15px;
+    }
+
+
+    .modal-emoji {
+
+        font-size:
+            28px;
+
+        margin-bottom:
+            4px;
+    }
+
+
+    .modal h2 {
+
+        font-size:
+            19px;
+
+        margin-bottom:
+            5px;
+    }
+
+
+    .modal p {
+
+        font-size:
+            11px;
+
+        line-height:
+            1.25;
+    }
+
+
+    .start-button,
+    .restart-button,
+    .home-button {
+
+        margin-top:
+            7px;
+
+        padding:
+            8px 13px;
+
+        font-size:
+            11px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="sky-decoration">
+
+    <div class="cloud cloud-1"></div>
+
+    <div class="cloud cloud-2"></div>
+
+    <div class="sun"></div>
+
+</div>
+
+
+<div class="game-wrapper">
+
+
+<header class="header">
+
+    <div class="logo-area">
+
+        <div class="logo-puzzle">
+            🧩
+        </div>
+
+        <div class="title-area">
+
+            <h1>
+                PUZZLE ORGAN DERIA
+            </h1>
+
+            <p>
+                🔬 JOM MEMERHATI • SAINS TAHUN 1
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-stats">
+
+        <div class="stat">
+
+            <span class="stat-icon">
+                ⭐
+            </span>
+
+            <span class="stat-label">
+                MARKAH
+            </span>
+
+            <span
+                class="stat-value"
+                id="score">
+                0
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            <span class="stat-icon">
+                🧩
+            </span>
+
+            <span class="stat-label">
+                PUZZLE
+            </span>
+
+            <span
+                class="stat-value"
+                id="pieceCount">
+                0/25
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            <span class="stat-icon">
+                ❤️
+            </span>
+
+            <span class="stat-label">
+                SOALAN
+            </span>
+
+            <span
+                class="stat-value"
+                id="questionCount">
+                1/25
+            </span>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="game-area">
+
+
+<section class="panel question-panel">
+
+    <div class="panel-header question-header">
+        🔎 SOALAN
+    </div>
+
+
+    <div class="question-content">
+
+        <div
+            class="question-number"
+            id="questionNumber">
+
+            SOALAN 1 / 25
+
+        </div>
+
+
+        <div
+            class="question-text"
+            id="questionText">
+
+            Ali melihat bunga merah.
+            Apakah deria yang digunakan?
+
+        </div>
+
+
+        <div
+            class="options"
+            id="options">
+        </div>
+
+
+        <div
+            class="feedback"
+            id="feedback">
+        </div>
+
+
+        <div class="instruction">
+
+            💡 <strong>ARAHAN:</strong>
+
+            Jawab soalan dengan betul
+            untuk mendapatkan satu keping puzzle.
+
+            <br><br>
+
+            🧩 Selepas mendapat puzzle,
+            <strong>DRAG</strong> kepingan itu ke
+            tapak puzzle yang bercahaya.
+
+            <br><br>
+
+            🎯 Tak perlu tepat sangat!
+            Bila kepingan sudah cukup dekat
+            dengan kotak yang betul,
+            ia akan <strong>TERUS MASUK SENDIRI</strong>.
+
+        </div>
+
+
+        <div class="next-area">
+
+            <button
+                class="next-button"
+                id="nextButton">
+
+                SOALAN SETERUSNYA ➜
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section
+    class="panel pieces-panel">
+
+    <div class="panel-header pieces-header">
+
+        🧩 KEPINGAN PUZZLE
+
+    </div>
+
+
+    <div
+        class="pieces-content"
+        id="piecesContainer">
+
+        <div
+            class="locked-message"
+            id="piecesMessage">
+
+            🔒
+
+            <br><br>
+
+            Jawab soalan untuk mendapatkan
+            kepingan puzzle!
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="panel puzzle-panel">
+
+    <div class="panel-header puzzle-header">
+
+        🧩 TAPAK PUZZLE
+
+    </div>
+
+
+    <div class="puzzle-content">
+
+        <p class="puzzle-instruction">
+
+            Jawab soalan → Dapat kepingan →
+            Drag ke kotak kuning!
+
+        </p>
+
+
+        <div
+            class="puzzle-board"
+            id="puzzleBoard">
+
+
+            <svg
+                class="sense-image"
+                viewBox="0 0 500 500"
+                preserveAspectRatio="none">
+
+                <rect
+                    width="500"
+                    height="500"
+                    fill="#fff8e1"/>
+
+                <circle
+                    cx="70"
+                    cy="80"
+                    r="45"
+                    fill="#b3e5fc"/>
+
+                <circle
+                    cx="430"
+                    cy="90"
+                    r="50"
+                    fill="#c8e6c9"/>
+
+                <circle
+                    cx="70"
+                    cy="420"
+                    r="50"
+                    fill="#f8bbd0"/>
+
+                <circle
+                    cx="430"
+                    cy="420"
+                    r="45"
+                    fill="#ffe082"/>
+
+
+                <text
+                    x="250"
+                    y="28"
+                    text-anchor="middle"
+                    font-size="18"
+                    font-weight="bold"
+                    fill="#1976d2">
+
+                    ORGAN DERIA
+
+                </text>
+
+
+                <ellipse
+                    cx="250"
+                    cy="270"
+                    rx="135"
+                    ry="160"
+                    fill="#ffcc99"
+                    stroke="#6d4c41"
+                    stroke-width="5"/>
+
+
+                <path
+                    d="
+                    M115 210
+                    Q120 90 250 90
+                    Q380 90 385 210
+                    Q350 160 320 145
+                    Q250 185 170 145
+                    Q140 170 115 210
+                    "
+                    fill="#4e342e"/>
+
+
+                <ellipse
+                    cx="195"
+                    cy="245"
+                    rx="38"
+                    ry="30"
+                    fill="white"
+                    stroke="#5d4037"
+                    stroke-width="4"/>
+
+
+                <circle
+                    cx="195"
+                    cy="245"
+                    r="15"
+                    fill="#795548"/>
+
+
+                <circle
+                    cx="199"
+                    cy="240"
+                    r="5"
+                    fill="white"/>
+
+
+                <ellipse
+                    cx="305"
+                    cy="245"
+                    rx="38"
+                    ry="30"
+                    fill="white"
+                    stroke="#5d4037"
+                    stroke-width="4"/>
+
+
+                <circle
+                    cx="305"
+                    cy="245"
+                    r="15"
+                    fill="#795548"/>
+
+
+                <circle
+                    cx="309"
+                    cy="240"
+                    r="5"
+                    fill="white"/>
+
+
+                <path
+                    d="
+                    M250 245
+                    Q235 300 250 305
+                    Q265 305 275 295
+                    "
+                    fill="none"
+                    stroke="#8d5a3b"
+                    stroke-width="5"/>
+
+
+                <path
+                    d="
+                    M205 330
+                    Q250 365 295 330
+                    Q285 390 250 392
+                    Q215 390 205 330
+                    "
+                    fill="#6d1b1b"
+                    stroke="#5d4037"
+                    stroke-width="4"/>
+
+
+                <path
+                    d="
+                    M220 350
+                    Q250 335 280 350
+                    "
+                    stroke="#ef5350"
+                    stroke-width="8"
+                    fill="none"/>
+
+
+                <ellipse
+                    cx="115"
+                    cy="285"
+                    rx="35"
+                    ry="50"
+                    fill="#ffcc99"
+                    stroke="#6d4c41"
+                    stroke-width="5"/>
+
+
+                <ellipse
+                    cx="115"
+                    cy="285"
+                    rx="15"
+                    ry="27"
+                    fill="#ef9a9a"/>
+
+
+                <ellipse
+                    cx="385"
+                    cy="285"
+                    rx="35"
+                    ry="50"
+                    fill="#ffcc99"
+                    stroke="#6d4c41"
+                    stroke-width="5"/>
+
+
+                <ellipse
+                    cx="385"
+                    cy="285"
+                    rx="15"
+                    ry="27"
+                    fill="#ef9a9a"/>
+
+
+                <text
+                    x="100"
+                    y="190"
+                    text-anchor="middle"
+                    font-size="15"
+                    font-weight="bold"
+                    fill="#0277bd">
+
+                    PENGLIHATAN
+
+                </text>
+
+
+                <text
+                    x="405"
+                    y="190"
+                    text-anchor="middle"
+                    font-size="15"
+                    font-weight="bold"
+                    fill="#388e3c">
+
+                    PENDENGARAN
+
+                </text>
+
+
+                <text
+                    x="250"
+                    y="430"
+                    text-anchor="middle"
+                    font-size="15"
+                    font-weight="bold"
+                    fill="#e65100">
+
+                    RASA
+
+                </text>
+
+
+                <text
+                    x="405"
+                    y="410"
+                    text-anchor="middle"
+                    font-size="15"
+                    font-weight="bold"
+                    fill="#7b1fa2">
+
+                    SENTUHAN
+
+                </text>
+
+
+                <text
+                    x="250"
+                    y="480"
+                    text-anchor="middle"
+                    font-size="16"
+                    font-weight="bold"
+                    fill="#1976d2">
+
+                    JOM MEMERHATI
+
+                </text>
+
+            </svg>
+
+
+            <div
+                class="puzzle-slots"
+                id="puzzleSlots">
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+<div class="progress-area">
+
+    <div class="progress-top">
+
+        <span>
+            🧩 Kemajuan Puzzle
+        </span>
+
+        <span id="progressText">
+            0 / 25
+        </span>
+
+    </div>
+
+
+    <div class="progress-track">
+
+        <div
+            class="progress-fill"
+            id="progressFill">
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+
+<!-- =====================================================
+     START OVERLAY
+===================================================== -->
+
+<div
+    class="overlay"
+    id="startOverlay">
+
+    <div class="modal">
+
+        <div class="modal-emoji">
+            🧩👀👂👃👅🖐️
+        </div>
+
+
+        <h2>
+            PUZZLE ORGAN DERIA
+        </h2>
+
+
+        <p>
+
+            Selamat datang, Saintis Cilik! 🔬
+
+            <br><br>
+
+            Jawab <strong>25 soalan</strong>
+            tentang deria dan kemahiran memerhati.
+
+            <br><br>
+
+            🧩 Jawapan betul akan memberikan
+            <strong>1 keping puzzle.</strong>
+
+            <br><br>
+
+            👉 Drag kepingan ke
+            <strong>kotak yang bercahaya.</strong>
+
+            <br><br>
+
+            🎨 Puzzle akan muncul apabila
+            diletakkan di tempat yang betul.
+
+            <br><br>
+
+            ⭐ Lengkapkan semua puzzle
+            untuk tamatkan permainan!
+
+        </p>
+
+
+        <button
+            class="start-button"
+            id="startButton">
+
+            🚀 MULA BERMAIN
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     RESULT OVERLAY
+===================================================== -->
+
+<div
+    class="overlay hidden"
+    id="resultOverlay">
+
+    <div class="modal">
+
+        <div
+            class="modal-emoji"
+            id="resultEmoji">
+
+            🏆
+
+        </div>
+
+
+        <h2>
+            PUZZLE SELESAI!
+        </h2>
+
+
+        <div
+            class="final-score"
+            id="finalScore">
+
+            25 / 25
+
+        </div>
+
+
+        <p id="resultMessage">
+
+            Tahniah! Kamu telah berjaya
+            melengkapkan puzzle organ deria!
+
+        </p>
+
+
+        <div class="result-buttons">
+
+            <button
+                class="restart-button"
+                id="restartButton">
+
+                🔄 MAIN SEMULA
+
+            </button>
+
+
+            <button
+    class="home-button"
+    id="homeButton">
+
+    🏠 HOME
+
+</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SOALAN
+========================================================= */
+
+const questions = [
+
+    {
+        question:
+        "Ali melihat bunga merah. Apakah deria yang digunakan?",
+        options: [
+            "Penglihatan",
+            "Pendengaran",
+            "Bau",
+            "Rasa"
+        ],
+        answer: 0
+    },
+
+    {
+        question:
+        "Siti menghidu bunga. Apakah deria yang digunakan?",
+        options: [
+            "Rasa",
+            "Bau",
+            "Sentuhan",
+            "Pendengaran"
+        ],
+        answer: 1
+    },
+
+    {
+        question:
+        "Ahmad mendengar bunyi loceng. Apakah deria yang digunakan?",
+        options: [
+            "Bau",
+            "Rasa",
+            "Pendengaran",
+            "Sentuhan"
+        ],
+        answer: 2
+    },
+
+    {
+        question:
+        "Lina menyentuh ais. Apakah deria yang digunakan?",
+        options: [
+            "Sentuhan",
+            "Penglihatan",
+            "Bau",
+            "Pendengaran"
+        ],
+        answer: 0
+    },
+
+    {
+        question:
+        "Amir merasa gula. Apakah deria yang digunakan?",
+        options: [
+            "Bau",
+            "Rasa",
+            "Penglihatan",
+            "Sentuhan"
+        ],
+        answer: 1
+    },
+
+    {
+        question:
+        "Apakah deria yang digunakan untuk melihat bentuk kucing?",
+        options: [
+            "Penglihatan",
+            "Bau",
+            "Rasa",
+            "Pendengaran"
+        ],
+        answer: 0
+    },
+
+    {
+        question:
+        "Apakah deria yang digunakan untuk mendengar bunyi burung?",
+        options: [
+            "Rasa",
+            "Bau",
+            "Pendengaran",
+            "Sentuhan"
+        ],
+        answer: 2
+    },
+
+    {
+        question:
+        "Apakah deria yang digunakan untuk menghidu minyak wangi?",
+        options: [
+            "Penglihatan",
+            "Bau",
+            "Rasa",
+            "Sentuhan"
+        ],
+        answer: 1
+    },
+
+    {
+        question:
+        "Apakah deria yang digunakan untuk merasa limau?",
+        options: [
+            "Pendengaran",
+            "Rasa",
+            "Bau",
+            "Penglihatan"
+        ],
+        answer: 1
+    },
+
+    {
+        question:
+        "Apakah deria yang digunakan untuk memegang kain lembut?",
+        options: [
+            "Bau",
+            "Rasa",
+            "Sentuhan",
+            "Pendengaran"
+        ],
+        answer: 2
+    },
+
+    {
+        question:
+        "Aisyah melihat gambar biri-biri. Dia menggunakan deria ______.",
+        options: [
+            "penglihatan",
+            "rasa",
+            "bau",
+            "pendengaran"
+        ],
+        answer: 0
+    },
+
+    {
+        question:
+        "Badrul mendengar bunyi alat muzik. Dia menggunakan deria ______.",
+        options: [
+            "bau",
+            "sentuhan",
+            "pendengaran",
+            "rasa"
+        ],
+        answer: 2
+    },
+
+    {
+        question:
+        "Mei Mei menghidu bunga ros. Dia menggunakan deria ______.",
+        options: [
+            "bau",
+            "penglihatan",
+            "rasa",
+            "pendengaran"
+        ],
+        answer: 0
+    },
+
+    {
+        question:
+        "Kumar menyentuh kiub ais. Dia menggunakan deria ______.",
+        options: [
+            "rasa",
+            "sentuhan",
+            "bau",
+            "penglihatan"
+        ],
+        answer: 1
+    },
+
+    {
+        question:
+        "Hana merasa makanan. Dia menggunakan deria ______.",
+        options: [
+            "rasa",
+            "bau",
+            "penglihatan",
+            "pendengaran"
+        ],
+        answer: 0
+    },
+
+    {
+        question:
+        "Apakah deria yang digunakan untuk melihat warna pelangi?",
+        options: [
+            "Bau",
+            "Penglihatan",
+            "Rasa",
+            "Sentuhan"
+        ],
+        answer: 1
+    },
+
+    {
+        question:
+        "Apakah deria yang digunakan untuk menghidu bau makanan?",
+        options: [
+            "Pendengaran",
+            "Sentuhan",
+            "Bau",
+            "Penglihatan"
+        ],
+        answer: 2
+    },
+
+    {
+        question:
+        "Apakah deria yang digunakan untuk mendengar bunyi guruh?",
+        options: [
+            "Pendengaran",
+            "Rasa",
+            "Bau",
+            "Sentuhan"
+        ],
+        answer: 0
+    },
+
+    {
+        question:
+        "Apakah deria yang digunakan apabila tangan terasa panas?",
+        options: [
+            "Penglihatan",
+            "Bau",
+            "Sentuhan",
+            "Rasa"
+        ],
+        answer: 2
+    },
+
+    {
+        question:
+        "Apakah deria yang digunakan untuk merasa rasa masin?",
+        options: [
+            "Rasa",
+            "Pendengaran",
+            "Penglihatan",
+            "Sentuhan"
+        ],
+        answer: 0
+    },
+
+    {
+        question:
+        "Murid melihat bentuk sebuah bola. Apakah deria yang digunakan?",
+        options: [
+            "Penglihatan",
+            "Bau",
+            "Rasa",
+            "Pendengaran"
+        ],
+        answer: 0
+    },
+
+    {
+        question:
+        "Murid mendengar bunyi kicauan burung. Apakah deria yang digunakan?",
+        options: [
+            "Sentuhan",
+            "Pendengaran",
+            "Bau",
+            "Rasa"
+        ],
+        answer: 1
+    },
+
+    {
+        question:
+        "Murid menghidu bau sabun. Apakah deria yang digunakan?",
+        options: [
+            "Rasa",
+            "Penglihatan",
+            "Bau",
+            "Sentuhan"
+        ],
+        answer: 2
+    },
+
+    {
+        question:
+        "Murid menyentuh permukaan kasar. Apakah deria yang digunakan?",
+        options: [
+            "Pendengaran",
+            "Sentuhan",
+            "Penglihatan",
+            "Bau"
+        ],
+        answer: 1
+    },
+
+    {
+        question:
+        "Murid merasa gula yang manis. Apakah deria yang digunakan?",
+        options: [
+            "Bau",
+            "Rasa",
+            "Pendengaran",
+            "Penglihatan"
+        ],
+        answer: 1
+    }
+
+];
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+const TOTAL_PIECES = 25;
+
+let currentQuestion = 0;
+
+let score = 0;
+
+let puzzlePiecesPlaced = 0;
+
+let currentPiece = null;
+
+let draggedPiece = null;
+
+let audioContext = null;
+
+let musicGain = null;
+
+let musicStarted = false;
+
+let musicTimer = null;
+
+
+/*
+   ========================================================
+   NEW DRAG / AUTO SCROLL VARIABLES
+   ========================================================
+*/
+
+let autoScrollTimer = null;
+
+let lastPointerX = 0;
+
+let lastPointerY = 0;
+
+let isDragging = false;
+
+const AUTO_SCROLL_ZONE = 75;
+
+const AUTO_SCROLL_SPEED = 10;
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const scoreDisplay =
+    document.getElementById("score");
+
+const pieceCount =
+    document.getElementById("pieceCount");
+
+const questionCount =
+    document.getElementById("questionCount");
+
+const questionNumber =
+    document.getElementById("questionNumber");
+
+const questionText =
+    document.getElementById("questionText");
+
+const options =
+    document.getElementById("options");
+
+const feedback =
+    document.getElementById("feedback");
+
+const nextButton =
+    document.getElementById("nextButton");
+
+const puzzleSlots =
+    document.getElementById("puzzleSlots");
+
+const piecesContainer =
+    document.getElementById("piecesContainer");
+
+const progressText =
+    document.getElementById("progressText");
+
+const progressFill =
+    document.getElementById("progressFill");
+
+const startOverlay =
+    document.getElementById("startOverlay");
+
+const resultOverlay =
+    document.getElementById("resultOverlay");
+
+const startButton =
+    document.getElementById("startButton");
+
+const restartButton =
+    document.getElementById("restartButton");
+
+const homeButton =
+    document.getElementById("homeButton");
+
+
+/* =========================================================
+   AUDIO
+========================================================= */
+
+function initAudio() {
+
+    if (!audioContext) {
+
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        if (!AudioContext) return;
+
+        audioContext =
+            new AudioContext();
+
+    }
+
+    if (
+        audioContext.state ===
+        "suspended"
+    ) {
+
+        audioContext.resume();
+
+    }
+
+}
+
+
+/* =========================================================
+   BUTTON SOUND
+========================================================= */
+
+function playButtonSound() {
+
+    try {
+
+        initAudio();
+
+        if (!audioContext) return;
+
+        const now =
+            audioContext.currentTime;
+
+        const oscillator =
+            audioContext.createOscillator();
+
+        const gain =
+            audioContext.createGain();
+
+        oscillator.type =
+            "sine";
+
+        oscillator.frequency.setValueAtTime(
+            650,
+            now
+        );
+
+        oscillator.frequency.exponentialRampToValueAtTime(
+            900,
+            now + .07
+        );
+
+        gain.gain.setValueAtTime(
+            .001,
+            now
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .12,
+            now + .01
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            now + .12
+        );
+
+        oscillator.connect(gain);
+
+        gain.connect(
+            audioContext.destination
+        );
+
+        oscillator.start(now);
+
+        oscillator.stop(
+            now + .13
+        );
+
+    }
+
+    catch(e) {}
+
+}
+
+
+/* =========================================================
+   CORRECT SOUND
+========================================================= */
+
+function playCorrectSound() {
+
+    try {
+
+        initAudio();
+
+        if (!audioContext) return;
+
+        const now =
+            audioContext.currentTime;
+
+        const notes = [
+            523,
+            659,
+            784
+        ];
+
+        notes.forEach(
+            (frequency,index) => {
+
+                const oscillator =
+                    audioContext.createOscillator();
+
+                const gain =
+                    audioContext.createGain();
+
+                oscillator.type =
+                    "sine";
+
+                oscillator.frequency.setValueAtTime(
+                    frequency,
+                    now + index * .1
+                );
+
+                gain.gain.setValueAtTime(
+                    .001,
+                    now + index * .1
+                );
+
+                gain.gain.exponentialRampToValueAtTime(
+                    .15,
+                    now + index * .1 + .02
+                );
+
+                gain.gain.exponentialRampToValueAtTime(
+                    .001,
+                    now + index * .1 + .22
+                );
+
+                oscillator.connect(gain);
+
+                gain.connect(
+                    audioContext.destination
+                );
+
+                oscillator.start(
+                    now + index * .1
+                );
+
+                oscillator.stop(
+                    now + index * .1 + .23
+                );
+
+            }
+        );
+
+    }
+
+    catch(e) {}
+
+}
+
+
+/* =========================================================
+   WRONG SOUND
+========================================================= */
+
+function playWrongSound() {
+
+    try {
+
+        initAudio();
+
+        if (!audioContext) return;
+
+        const now =
+            audioContext.currentTime;
+
+        const oscillator =
+            audioContext.createOscillator();
+
+        const gain =
+            audioContext.createGain();
+
+        oscillator.type =
+            "sawtooth";
+
+        oscillator.frequency.setValueAtTime(
+            220,
+            now
+        );
+
+        oscillator.frequency.exponentialRampToValueAtTime(
+            150,
+            now + .18
+        );
+
+        gain.gain.setValueAtTime(
+            .001,
+            now
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .12,
+            now + .01
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            now + .25
+        );
+
+        oscillator.connect(gain);
+
+        gain.connect(
+            audioContext.destination
+        );
+
+        oscillator.start(now);
+
+        oscillator.stop(
+            now + .26
+        );
+
+    }
+
+    catch(e) {}
+
+}
+
+
+/* =========================================================
+   PLACE SOUND
+========================================================= */
+
+function playPlaceSound() {
+
+    try {
+
+        initAudio();
+
+        if (!audioContext) return;
+
+        const now =
+            audioContext.currentTime;
+
+        [660,880].forEach(
+            (frequency,index) => {
+
+                const oscillator =
+                    audioContext.createOscillator();
+
+                const gain =
+                    audioContext.createGain();
+
+                oscillator.type =
+                    "triangle";
+
+                oscillator.frequency.setValueAtTime(
+                    frequency,
+                    now + index * .1
+                );
+
+                gain.gain.setValueAtTime(
+                    .001,
+                    now + index * .1
+                );
+
+                gain.gain.exponentialRampToValueAtTime(
+                    .15,
+                    now + index * .1 + .02
+                );
+
+                gain.gain.exponentialRampToValueAtTime(
+                    .001,
+                    now + index * .1 + .25
+                );
+
+                oscillator.connect(gain);
+
+                gain.connect(
+                    audioContext.destination
+                );
+
+                oscillator.start(
+                    now + index * .1
+                );
+
+                oscillator.stop(
+                    now + index * .1 + .27
+                );
+
+            }
+        );
+
+    }
+
+    catch(e) {}
+
+}
+
+
+/* =========================================================
+   FINISH SOUND
+========================================================= */
+
+function playFinishSound() {
+
+    try {
+
+        initAudio();
+
+        if (!audioContext) return;
+
+        const now =
+            audioContext.currentTime;
+
+        const notes = [
+            523,
+            659,
+            784,
+            1046
+        ];
+
+        notes.forEach(
+            (frequency,index) => {
+
+                const oscillator =
+                    audioContext.createOscillator();
+
+                const gain =
+                    audioContext.createGain();
+
+                oscillator.type =
+                    "triangle";
+
+                oscillator.frequency.setValueAtTime(
+                    frequency,
+                    now + index * .15
+                );
+
+                gain.gain.setValueAtTime(
+                    .001,
+                    now + index * .15
+                );
+
+                gain.gain.exponentialRampToValueAtTime(
+                    .16,
+                    now + index * .15 + .02
+                );
+
+                gain.gain.exponentialRampToValueAtTime(
+                    .001,
+                    now + index * .15 + .4
+                );
+
+                oscillator.connect(gain);
+
+                gain.connect(
+                    audioContext.destination
+                );
+
+                oscillator.start(
+                    now + index * .15
+                );
+
+                oscillator.stop(
+                    now + index * .15 + .42
+                );
+
+            }
+        );
+
+    }
+
+    catch(e) {}
+
+}
+
+
+/* =========================================================
+   BACKGROUND MUSIC
+========================================================= */
+
+function startBackgroundMusic() {
+
+    try {
+
+        initAudio();
+
+        if (!audioContext) return;
+
+        if (musicStarted) return;
+
+        musicStarted = true;
+
+        musicGain =
+            audioContext.createGain();
+
+        musicGain.gain.value =
+            0.035;
+
+        musicGain.connect(
+            audioContext.destination
+        );
+
+
+        const melody = [
+
+            261.63,
+            329.63,
+            392.00,
+            329.63,
+
+            293.66,
+            349.23,
+            440.00,
+            349.23,
+
+            261.63,
+            329.63,
+            392.00,
+            523.25,
+
+            392.00,
+            329.63,
+            293.66,
+            261.63
+
+        ];
+
+
+        let index = 0;
+
+
+        function playNextNote() {
+
+            if (!musicStarted) return;
+
+            const now =
+                audioContext.currentTime;
+
+            const oscillator =
+                audioContext.createOscillator();
+
+            const gain =
+                audioContext.createGain();
+
+            oscillator.type =
+                "sine";
+
+            oscillator.frequency.setValueAtTime(
+                melody[index],
+                now
+            );
+
+            gain.gain.setValueAtTime(
+                .001,
+                now
+            );
+
+            gain.gain.exponentialRampToValueAtTime(
+                .045,
+                now + .03
+            );
+
+            gain.gain.exponentialRampToValueAtTime(
+                .001,
+                now + .45
+            );
+
+            oscillator.connect(gain);
+
+            gain.connect(
+                musicGain
+            );
+
+            oscillator.start(now);
+
+            oscillator.stop(
+                now + .48
+            );
+
+            index++;
+
+            if (
+                index >=
+                melody.length
+            ) {
+
+                index = 0;
+
+            }
+
+            musicTimer =
+                setTimeout(
+                    playNextNote,
+                    500
+                );
+
+        }
+
+
+        playNextNote();
+
+    }
+
+    catch(e) {}
+
+}
+
+
+/* =========================================================
+   BUTTON SOUND
+========================================================= */
+
+document
+    .querySelectorAll("button")
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    playButtonSound();
+
+                }
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   START
+========================================================= */
+
+startButton.addEventListener(
+    "click",
+    () => {
+
+        initAudio();
+
+        startBackgroundMusic();
+
+        startOverlay.classList.add(
+            "hidden"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   CREATE SLOT SVG
+========================================================= */
+
+function createSlotSVG(index) {
+
+    return `
+
+        <svg
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg">
+
+            <rect
+                x="1"
+                y="1"
+                width="98"
+                height="98"
+                fill="rgba(255,255,255,.18)"
+                stroke="rgba(70,70,70,.35)"
+                stroke-width="2"
+                stroke-dasharray="4 3"
+            />
+
+        </svg>
+
+    `;
+
+}
+
+
+/* =========================================================
+   CREATE SLOTS
+========================================================= */
+
+function createSlots() {
+
+    puzzleSlots.innerHTML = "";
+
+    for (
+        let i = 0;
+        i < TOTAL_PIECES;
+        i++
+    ) {
+
+        const slot =
+            document.createElement("div");
+
+        slot.className =
+            "slot";
+
+        slot.dataset.index =
+            i;
+
+        slot.innerHTML =
+            createSlotSVG(i);
+
+        puzzleSlots.appendChild(
+            slot
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CREATE IMAGE PUZZLE PIECE
+========================================================= */
+
+function createImagePuzzlePiece(
+    index
+) {
+
+    const board =
+        document.querySelector(
+            ".sense-image"
+        );
+
+    const clone =
+        board.cloneNode(true);
+
+    clone.classList.remove(
+        "sense-image"
+    );
+
+    clone.removeAttribute(
+        "style"
+    );
+
+    clone.setAttribute(
+        "xmlns",
+        "http://www.w3.org/2000/svg"
+    );
+
+    const serializer =
+        new XMLSerializer();
+
+    const svgString =
+        serializer.serializeToString(
+            clone
+        );
+
+    const imageURL =
+        "data:image/svg+xml;charset=utf-8," +
+        encodeURIComponent(
+            svgString
+        );
+
+
+    const col =
+        index % 5;
+
+    const row =
+        Math.floor(
+            index / 5
+        );
+
+
+    const imageX =
+        -(col * 100);
+
+    const imageY =
+        -(row * 100);
+
+
+    return `
+
+        <svg
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg">
+
+            <defs>
+
+                <clipPath
+                    id="imageClip${index}">
+
+                    <rect
+                        x="0"
+                        y="0"
+                        width="100"
+                        height="100"/>
+
+                </clipPath>
+
+            </defs>
+
+
+            <g
+                clip-path="url(#imageClip${index})">
+
+                <image
+                    href="${imageURL}"
+
+                    x="${imageX}"
+
+                    y="${imageY}"
+
+                    width="500"
+
+                    height="500"
+
+                    preserveAspectRatio="none"
+
+                />
+
+            </g>
+
+
+            <rect
+                x="0"
+                y="0"
+                width="100"
+                height="100"
+                fill="none"
+                stroke="#ffffff"
+                stroke-width="2"
+            />
+
+        </svg>
+
+    `;
+
+}
+
+
+/* =========================================================
+   RESET PIECES
+========================================================= */
+
+function resetPiecesTray() {
+
+    piecesContainer.innerHTML = `
+
+        <div
+            class="locked-message"
+            id="piecesMessage">
+
+            🔒
+
+            <br><br>
+
+            Jawab soalan untuk mendapatkan
+            kepingan puzzle!
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   GIVE PIECE
+========================================================= */
+
+function givePuzzlePiece(
+    pieceIndex
+) {
+
+    piecesContainer.innerHTML = "";
+
+    const piece =
+        document.createElement("div");
+
+    piece.className =
+        "piece";
+
+    piece.dataset.index =
+        pieceIndex;
+
+    piece.innerHTML =
+        createImagePuzzlePiece(
+            pieceIndex
+        );
+
+    piecesContainer.appendChild(
+        piece
+    );
+
+    currentPiece =
+        piece;
+
+    enableDrag(piece);
+
+
+    const slot =
+        puzzleSlots.querySelector(
+            `[data-index="${pieceIndex}"]`
+        );
+
+
+    if (slot) {
+
+        slot.classList.add(
+            "highlight"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   START AUTO SCROLL
+========================================================= */
+
+function startAutoScroll() {
+
+    if (autoScrollTimer) return;
+
+
+    autoScrollTimer =
+        setInterval(
+            () => {
+
+                if (
+                    !isDragging
+                ) {
+
+                    stopAutoScroll();
+
+                    return;
+
+                }
+
+
+                const viewportHeight =
+                    window.innerHeight;
+
+
+                /*
+                   Scroll ke atas
+                */
+
+                if (
+                    lastPointerY <
+                    AUTO_SCROLL_ZONE
+                ) {
+
+                    const intensity =
+                        (
+                            AUTO_SCROLL_ZONE -
+                            lastPointerY
+                        ) /
+                        AUTO_SCROLL_ZONE;
+
+
+                    const amount =
+                        Math.ceil(
+                            AUTO_SCROLL_SPEED *
+                            intensity
+                        );
+
+
+                    window.scrollBy(
+                        0,
+                        -amount
+                    );
+
+                }
+
+
+                /*
+                   Scroll ke bawah
+                */
+
+                else if (
+                    lastPointerY >
+                    viewportHeight -
+                    AUTO_SCROLL_ZONE
+                ) {
+
+                    const intensity =
+                        (
+                            lastPointerY -
+                            (
+                                viewportHeight -
+                                AUTO_SCROLL_ZONE
+                            )
+                        ) /
+                        AUTO_SCROLL_ZONE;
+
+
+                    const amount =
+                        Math.ceil(
+                            AUTO_SCROLL_SPEED *
+                            intensity
+                        );
+
+
+                    window.scrollBy(
+                        0,
+                        amount
+                    );
+
+                }
+
+            },
+            16
+        );
+
+}
+
+
+function stopAutoScroll() {
+
+    if (
+        autoScrollTimer
+    ) {
+
+        clearInterval(
+            autoScrollTimer
+        );
+
+        autoScrollTimer =
+            null;
+
+    }
+
+}
+
+
+/* =========================================================
+   UPDATE DRAGGED PIECE POSITION
+========================================================= */
+
+function updateDraggedPiecePosition(
+    x,
+    y,
+    offsetX,
+    offsetY
+) {
+
+    if (
+        !draggedPiece
+    ) return;
+
+
+    draggedPiece.style.left =
+        (
+            x -
+            offsetX
+        ) + "px";
+
+
+    draggedPiece.style.top =
+        (
+            y -
+            offsetY
+        ) + "px";
+
+}
+
+
+/* =========================================================
+   DRAG
+   =========================================================
+   
+   SISTEM BARU:
+   - pointerdown
+   - piece jadi fixed
+   - pointermove
+   - auto-scroll apabila dekat edge
+   - pointerup
+========================================================= */
+
+function enableDrag(piece) {
+
+    let offsetX = 0;
+
+    let offsetY = 0;
+
+
+    function pointerDown(e) {
+
+        if (
+            e.pointerType ===
+            "mouse" &&
+            e.button !== 0
+        ) {
+
+            return;
+
+        }
+
+
+        e.preventDefault();
+
+
+        initAudio();
+
+
+        draggedPiece =
+            piece;
+
+
+        isDragging =
+            true;
+
+
+        lastPointerX =
+            e.clientX;
+
+        lastPointerY =
+            e.clientY;
+
+
+        const rect =
+            piece.getBoundingClientRect();
+
+
+        offsetX =
+            e.clientX -
+            rect.left;
+
+        offsetY =
+            e.clientY -
+            rect.top;
+
+
+        /*
+           Simpan saiz asal.
+        */
+
+        const width =
+            rect.width;
+
+        const height =
+            rect.height;
+
+
+        piece.classList.add(
+            "dragging"
+        );
+
+
+        piece.style.width =
+            width + "px";
+
+        piece.style.height =
+            height + "px";
+
+
+        piece.style.left =
+            rect.left + "px";
+
+        piece.style.top =
+            rect.top + "px";
+
+
+        /*
+           Pindahkan ke body supaya
+           tidak tersekat oleh panel.
+        */
+
+        document.body.appendChild(
+            piece
+        );
+
+
+        /*
+           Pastikan browser tidak cuba
+           melakukan native scrolling/dragging.
+        */
+
+        try {
+
+            piece.setPointerCapture(
+                e.pointerId
+            );
+
+        }
+
+        catch(error) {}
+
+
+        document.addEventListener(
+            "pointermove",
+            pointerMove,
+            {
+                passive:false
+            }
+        );
+
+
+        document.addEventListener(
+            "pointerup",
+            pointerUp,
+            {
+                once:true
+            }
+        );
+
+
+        document.addEventListener(
+            "pointercancel",
+            pointerCancel,
+            {
+                once:true
+            }
+        );
+
+
+        /*
+           START AUTO SCROLL
+        */
+
+        startAutoScroll();
+
+
+        highlightNearestSlot(
+            e.clientX,
+            e.clientY
+        );
+
+    }
+
+
+    function pointerMove(e) {
+
+        if (
+            draggedPiece !==
+            piece ||
+            !isDragging
+        ) {
+
+            return;
+
+        }
+
+
+        e.preventDefault();
+
+
+        lastPointerX =
+            e.clientX;
+
+        lastPointerY =
+            e.clientY;
+
+
+        /*
+           Gerakkan puzzle ikut jari.
+        */
+
+        updateDraggedPiecePosition(
+            e.clientX,
+            e.clientY,
+            offsetX,
+            offsetY
+        );
+
+
+        /*
+           Cari target semula.
+           Ini penting apabila page sedang
+           auto-scroll.
+        */
+
+        highlightNearestSlot(
+            e.clientX,
+            e.clientY
+        );
+
+    }
+
+
+    function pointerUp(e) {
+
+        if (
+            draggedPiece !==
+            piece
+        ) {
+
+            return;
+
+        }
+
+
+        e.preventDefault();
+
+
+        lastPointerX =
+            e.clientX;
+
+        lastPointerY =
+            e.clientY;
+
+
+        stopAutoScroll();
+
+
+        document.removeEventListener(
+            "pointermove",
+            pointerMove
+        );
+
+
+        document.removeEventListener(
+            "pointercancel",
+            pointerCancel
+        );
+
+
+        isDragging =
+            false;
+
+
+        piece.classList.remove(
+            "dragging"
+        );
+
+
+        const slot =
+            findSlotAtPoint(
+                e.clientX,
+                e.clientY
+            );
+
+
+        if (slot) {
+
+            const pieceIndex =
+                Number(
+                    piece.dataset.index
+                );
+
+            const slotIndex =
+                Number(
+                    slot.dataset.index
+                );
+
+
+            if (
+                pieceIndex ===
+                slotIndex
+            ) {
+
+                placePiece(
+                    piece,
+                    slot
+                );
+
+            }
+
+            else {
+
+                returnPiece(
+                    piece
+                );
+
+                playWrongSound();
+
+            }
+
+        }
+
+        else {
+
+            returnPiece(
+                piece
+            );
+
+        }
+
+
+        draggedPiece =
+            null;
+
+
+        clearSlotHighlights();
+
+    }
+
+
+    function pointerCancel(e) {
+
+        stopAutoScroll();
+
+
+        document.removeEventListener(
+            "pointermove",
+            pointerMove
+        );
+
+
+        isDragging =
+            false;
+
+
+        if (
+            draggedPiece ===
+            piece
+        ) {
+
+            returnPiece(
+                piece
+            );
+
+        }
+
+
+        draggedPiece =
+            null;
+
+
+        clearSlotHighlights();
+
+    }
+
+
+    piece.addEventListener(
+        "pointerdown",
+        pointerDown,
+        {
+            passive:false
+        }
+    );
+
+}
+
+
+/* =========================================================
+   FIND SLOT
+========================================================= */
+
+function findSlotAtPoint(
+    x,
+    y
+) {
+
+    const slots =
+        document.querySelectorAll(
+            ".slot"
+        );
+
+
+    let nearest = null;
+
+    let smallestDistance =
+        Infinity;
+
+
+    slots.forEach(
+        slot => {
+
+            if (
+                slot.classList.contains(
+                    "filled"
+                )
+            ) return;
+
+
+            const rect =
+                slot.getBoundingClientRect();
+
+
+            const centerX =
+                rect.left +
+                rect.width / 2;
+
+            const centerY =
+                rect.top +
+                rect.height / 2;
+
+
+            const distance =
+                Math.sqrt(
+                    Math.pow(
+                        x-centerX,
+                        2
+                    ) +
+                    Math.pow(
+                        y-centerY,
+                        2
+                    )
+                );
+
+
+            if (
+                distance <
+                smallestDistance
+            ) {
+
+                smallestDistance =
+                    distance;
+
+                nearest =
+                    slot;
+
+            }
+
+        }
+    );
+
+
+    /*
+       Diperbesarkan sedikit supaya
+       lebih senang drop di iPad.
+    */
+
+    if (
+        smallestDistance <
+        90
+    ) {
+
+        return nearest;
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =========================================================
+   HIGHLIGHT SLOT
+========================================================= */
+
+function highlightNearestSlot(
+    x,
+    y
+) {
+
+    clearSlotHighlights();
+
+
+    if (
+        !draggedPiece
+    ) return;
+
+
+    const pieceIndex =
+        Number(
+            draggedPiece.dataset.index
+        );
+
+
+    const target =
+        puzzleSlots.querySelector(
+            `[data-index="${pieceIndex}"]`
+        );
+
+
+    if (!target) return;
+
+
+    const rect =
+        target.getBoundingClientRect();
+
+
+    const centerX =
+        rect.left +
+        rect.width / 2;
+
+    const centerY =
+        rect.top +
+        rect.height / 2;
+
+
+    const distance =
+        Math.sqrt(
+            Math.pow(
+                x-centerX,
+                2
+            ) +
+            Math.pow(
+                y-centerY,
+                2
+            )
+        );
+
+
+    if (
+        distance <
+        120
+    ) {
+
+        target.classList.add(
+            "near-target"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CLEAR HIGHLIGHTS
+========================================================= */
+
+function clearSlotHighlights() {
+
+    document
+        .querySelectorAll(
+            ".slot"
+        )
+        .forEach(
+            slot => {
+
+                if (
+                    !slot.classList.contains(
+                        "filled"
+                    )
+                ) {
+
+                    slot.classList.remove(
+                        "near-target"
+                    );
+
+                    slot.classList.remove(
+                        "highlight"
+                    );
+
+                }
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   RETURN PIECE
+========================================================= */
+
+function returnPiece(
+    piece
+) {
+
+    if (
+        !piece
+    ) return;
+
+
+    piecesContainer.appendChild(
+        piece
+    );
+
+
+    piece.style.position =
+        "";
+
+    piece.style.left =
+        "";
+
+    piece.style.top =
+        "";
+
+    piece.style.width =
+        "";
+
+    piece.style.height =
+        "";
+
+
+    piece.classList.remove(
+        "dragging"
+    );
+
+}
+
+
+/* =========================================================
+   PLACE PIECE
+========================================================= */
+
+function placePiece(
+    piece,
+    slot
+) {
+
+    const pieceIndex =
+        Number(
+            piece.dataset.index
+        );
+
+    const slotIndex =
+        Number(
+            slot.dataset.index
+        );
+
+
+    if (
+        pieceIndex !==
+        slotIndex
+    ) {
+
+        returnPiece(piece);
+
+        playWrongSound();
+
+        return;
+
+    }
+
+
+    slot.classList.remove(
+        "highlight"
+    );
+
+    slot.classList.remove(
+        "near-target"
+    );
+
+    slot.classList.add(
+        "filled"
+    );
+
+    slot.classList.add(
+        "success"
+    );
+
+
+    piece.remove();
+
+
+    slot.innerHTML =
+        createImagePuzzlePiece(
+            pieceIndex
+        );
+
+
+    puzzlePiecesPlaced++;
+
+
+    updateStats();
+
+
+    playPlaceSound();
+
+
+    if (
+        puzzlePiecesPlaced ===
+        TOTAL_PIECES
+    ) {
+
+        setTimeout(
+            finishGame,
+            900
+        );
+
+        return;
+
+    }
+
+
+    nextButton.classList.add(
+        "show"
+    );
+
+
+    feedback.className =
+        "feedback show success";
+
+
+    feedback.innerHTML = `
+
+        🧩 <strong>TEPAT!</strong>
+
+        <br>
+
+        Kepingan berjaya dipasang!
+
+        <br><br>
+
+        🎨 Bahagian gambar organ deria
+        telah muncul.
+
+        <br><br>
+
+        ✅ Kamu boleh pergi ke
+        <strong>soalan seterusnya.</strong>
+
+    `;
+
+}
+
+
+/* =========================================================
+   LOAD QUESTION
+========================================================= */
+
+function loadQuestion() {
+
+    const q =
+        questions[
+            currentQuestion
+        ];
+
+
+    questionNumber.textContent =
+        `SOALAN ${
+            currentQuestion+1
+        } / ${questions.length}`;
+
+
+    questionCount.textContent =
+        `${
+            currentQuestion+1
+        }/${questions.length}`;
+
+
+    questionText.textContent =
+        q.question;
+
+
+    feedback.className =
+        "feedback";
+
+    feedback.textContent =
+        "";
+
+
+    options.innerHTML =
+        "";
+
+
+    nextButton.classList.remove(
+        "show"
+    );
+
+
+    currentPiece = null;
+
+
+    q.options.forEach(
+        (
+            optionText,
+            index
+        ) => {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "option";
+
+
+            button.innerHTML = `
+
+                <strong>
+                    ${
+                        String.fromCharCode(
+                            65+index
+                        )
+                    }.
+                </strong>
+
+                ${optionText}
+
+            `;
+
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    playButtonSound();
+
+                    checkAnswer(
+                        index,
+                        button
+                    );
+
+                }
+            );
+
+
+            options.appendChild(
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CHECK ANSWER
+========================================================= */
+
+function checkAnswer(
+    selectedIndex,
+    selectedButton
+) {
+
+    const q =
+        questions[
+            currentQuestion
+        ];
+
+
+    const buttons =
+        document.querySelectorAll(
+            ".option"
+        );
+
+
+    if (
+        selectedIndex ===
+        q.answer
+    ) {
+
+        score++;
+
+
+        selectedButton.classList.add(
+            "correct"
+        );
+
+
+        buttons.forEach(
+            button => {
+
+                button.disabled =
+                    true;
+
+            }
+        );
+
+
+        feedback.className =
+            "feedback show success";
+
+
+        feedback.innerHTML = `
+
+            🎉 <strong>BETUL!</strong>
+
+            <br>
+
+            Kamu mendapat
+            <strong>1 keping puzzle!</strong>
+
+            <br><br>
+
+            🧩 Seret kepingan puzzle
+            ke tapak puzzle yang bercahaya.
+
+        `;
+
+
+        playCorrectSound();
+
+
+        updateStats();
+
+
+        givePuzzlePiece(
+            currentQuestion
+        );
+
+
+        return;
+
+    }
+
+
+    selectedButton.classList.add(
+        "wrong"
+    );
+
+
+    feedback.className =
+        "feedback show error";
+
+
+    feedback.innerHTML = `
+
+        ❌ <strong>CUBA LAGI!</strong>
+
+        <br>
+
+        Jangan risau 😊
+
+        <br>
+
+        Kamu boleh cuba semula
+        sehingga mendapat jawapan yang betul.
+
+    `;
+
+
+    playWrongSound();
+
+
+    setTimeout(
+        () => {
+
+            selectedButton.classList.remove(
+                "wrong"
+            );
+
+        },
+        600
+    );
+
+}
+
+
+/* =========================================================
+   NEXT
+========================================================= */
+
+nextButton.addEventListener(
+    "click",
+    () => {
+
+        playButtonSound();
+
+
+        currentQuestion++;
+
+
+        if (
+            currentQuestion >=
+            questions.length
+        ) {
+
+            finishGame();
+
+            return;
+
+        }
+
+
+        loadQuestion();
+
+    }
+);
+
+
+/* =========================================================
+   UPDATE STATS
+========================================================= */
+
+function updateStats() {
+
+    scoreDisplay.textContent =
+        score;
+
+
+    pieceCount.textContent =
+        `${puzzlePiecesPlaced}/${TOTAL_PIECES}`;
+
+
+    progressText.textContent =
+        `${puzzlePiecesPlaced}/${TOTAL_PIECES}`;
+
+
+    progressFill.style.width =
+        `${
+            (
+                puzzlePiecesPlaced /
+                TOTAL_PIECES
+            ) *
+            100
+        }%`;
+
+}
+
+
+/* =========================================================
+   FINISH GAME
+========================================================= */
+
+function finishGame() {
+
+    stopAutoScroll();
+
+
+    isDragging =
+        false;
+
+
+    draggedPiece =
+        null;
+
+
+    document.getElementById(
+        "finalScore"
+    ).textContent =
+        `${score}/${questions.length}`;
+
+
+    document.getElementById(
+        "resultMessage"
+    ).innerHTML = `
+
+        🎉 Tahniah, Saintis Cilik!
+
+        <br><br>
+
+        Kamu telah menjawab
+        <strong>25 soalan</strong>
+        dan berjaya melengkapkan
+        puzzle Organ Deria.
+
+        <br><br>
+
+        🧩 <strong>PUZZLE LENGKAP!</strong>
+
+        <br><br>
+
+        🔬 Kamu memang hebat!
+
+    `;
+
+
+    resultOverlay.classList.remove(
+        "hidden"
+    );
+
+
+    playFinishSound();
+
+
+    createConfetti();
+
+}
+
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+restartButton.addEventListener(
+    "click",
+    () => {
+
+        playButtonSound();
+
+
+        stopAutoScroll();
+
+
+        resultOverlay.classList.add(
+            "hidden"
+        );
+
+
+        currentQuestion = 0;
+
+        score = 0;
+
+        puzzlePiecesPlaced = 0;
+
+        currentPiece = null;
+
+        draggedPiece = null;
+
+        isDragging = false;
+
+
+        createSlots();
+
+        resetPiecesTray();
+
+        updateStats();
+
+        loadQuestion();
+
+        startBackgroundMusic();
+
+    }
+);
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+homeButton.addEventListener(
+    "click",
+    () => {
+
+        playButtonSound();
+
+        stopAutoScroll();
+
+        setTimeout(
+            () => {
+
+                window.location.href =
+                    "index.html";
+
+            },
+            100
+        );
+
+    }
+);
+
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+function createConfetti() {
+
+    const emojis = [
+
+        "⭐",
+        "✨",
+        "🎉",
+        "🧩",
+        "🌟",
+        "🔬",
+        "👏"
+
+    ];
+
+
+    for (
+        let i = 0;
+        i < 80;
+        i++
+    ) {
+
+        const item =
+            document.createElement(
+                "div"
+            );
+
+
+        item.className =
+            "confetti";
+
+
+        item.textContent =
+            emojis[
+                Math.floor(
+                    Math.random() *
+                    emojis.length
+                )
+            ];
+
+
+        item.style.left =
+            Math.random() *
+            100 +
+            "vw";
+
+
+        item.style.fontSize =
+            (
+                14 +
+                Math.random() *
+                20
+            ) +
+            "px";
+
+
+        item.style.animationDuration =
+            (
+                2 +
+                Math.random() *
+                3
+            ) +
+            "s";
+
+
+        item.style.animationDelay =
+            Math.random() *
+            1.5 +
+            "s";
+
+
+        document.body.appendChild(
+            item
+        );
+
+
+        setTimeout(
+            () => {
+
+                item.remove();
+
+            },
+            6000
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+createSlots();
+
+updateStats();
+
+loadQuestion();
+
+</script>
+
+
+</body>
+
+</html>
